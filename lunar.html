@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lunar Arithmetic</title>
+    <script type="module">
+        const add = (a, b) => {
+            let p10 = 1; // start with 10^1
+            let res = 0;
+            while (true) {
+                res += Math.max(a % 10, b % 10) * p10;
+                a = Math.floor(a / 10);
+                b = Math.floor(b / 10);
+                if (a === 0 && b === 0) {
+                    return res;
+                }
+                p10 *= 10; // 10^...N
+            }
+        };
+        const mult = (a, b) => {
+            let pb10 = 1; // start with 10^1 for b
+            let res = 0;
+            while (true) {
+                let row = 0;
+                let pa10 = 1; // start with 10^1 for a
+                let c = a; // we need a copy of a
+                while (true) {
+                    row += Math.min(b % 10, c % 10) * pa10;
+                    c = Math.floor(c / 10);
+                    if (c === 0) {
+                        break;
+                    }
+                    pa10 *= 10;
+                }
+                res = add(res, row * pb10);
+                b = Math.floor(b / 10);
+                if (b === 0) {
+                    break;
+                }
+                pb10 *= 10;
+            }
+            return res;
+        };
+        const output = document.querySelector("#result");
+        document.querySelector("button#plus").onclick = () => {
+            const a = parseInt(document.querySelector("input#a").value);
+            const b = parseInt(document.querySelector("input#b").value);
+            if( 0 > a || 0 > b ) {
+                alert("Both numbers must be positive.");
+            } else {
+                output.textContent = a + " + " + b + " = " + add(a, b);
+            }
+        };
+        document.querySelector("button#mult").onclick = () => {
+            const a = parseInt(document.querySelector("input#a").value);
+            const b = parseInt(document.querySelector("input#b").value);
+            if( 0 > a || 0 > b ) {
+                alert("Both numbers must be positive.");
+            } else {
+                output.textContent = a + " * " + b + " = " + mult(a, b);
+            }
+        };
+    </script>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background-color: #1A1A1A;
+            color: #999;
+        }
+
+        div.center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px;
+            border-radius: 8px;
+            background-color: #101010;
+        }
+
+        div.operators {
+            margin: 20px 0;
+        }
+
+        h1 {
+            margin: 0 0 20px 0;
+            font-size: 28px;
+        }
+
+        label {
+            margin: 0 4px 0 0;
+        }
+
+        label:not(:first-child) {
+            margin: 0 4px 0 12px;
+        }
+
+        input[type=number] {
+            width: 64px;
+            font-size: 12px;
+            line-height: 12px;
+            border: none;
+            padding: 8px;
+            border-radius: 3px;
+        }
+
+        button {
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            line-height: 0;
+            font-size: 24px;
+            text-align: center;
+            border: none;
+            border-radius: 3px;
+        }
+
+        button#plus {
+            margin: 0 24px 0 0;
+        }
+
+        #result {
+            font-size: 24px;
+        }
+
+        a {
+            color: #666;
+            margin: 12px 0 0 0;
+        }
+    </style>
+</head>
+<body>
+<div class="center">
+    <h1>Lunar Arithmetic Calculator</h1>
+    <div class="input">
+        <label>A:</label>
+        <input type="number" min="0" value="169" id="a">
+        <label>B:</label>
+        <input type="number" min="0" value="248" id="b">
+    </div>
+    <div class="operators">
+        <button id="plus">+</button>
+        <button id="mult">∙</button>
+    </div>
+    <div id="result">???</div>
+    <a href="https://www.youtube.com/watch?v=cZkGeR9CWbk">Primes on the Moon (Lunar Arithmetic) - Numberphile</a>
+</div>
+</body>
+</html>
